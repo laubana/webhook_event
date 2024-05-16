@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors(require("./config/cors").cors));
 app.use(express.json());
-const Group = require("../model/Group");
+const Group = require("./model/Group");
 
 app.post("/webhook", express.json({ type: "application/json" }), (req, res) => {
   const event = req.body;
