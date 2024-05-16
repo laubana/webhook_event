@@ -14,7 +14,7 @@ app.post("/webhook", express.json({ type: "application/json" }), (req, res) => {
 
   switch (event.type) {
     case "checkout.session.completed":
-      console.log(event.metadata);
+      console.log(event.data.object.metadata);
       break;
     case "payment_method.attached":
       const paymentMethod = event.data.object;
