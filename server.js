@@ -14,7 +14,7 @@ app.post(
   async (req, res) => {
     const event = req.body;
 
-    console.log(event);
+    console.log(event.type);
 
     switch (event.type) {
       case "checkout.session.completed":
@@ -40,7 +40,6 @@ app.post(
         const paymentMethod = event.data.object;
         break;
       default:
-        console.log(`Unhandled event type ${event.type}`);
     }
 
     res.json({ received: true });
