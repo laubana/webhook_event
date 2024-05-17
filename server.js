@@ -21,6 +21,9 @@ app.post(
         const transactionId = event.data.object.metadata.transactionId;
         const groupId = event.data.object.metadata.groupId;
 
+        console.log(transactionId);
+        console.log(groupId);
+
         const updatedGroup = await Group.findByIdAndUpdate(groupId, {
           isActive: true,
         })
