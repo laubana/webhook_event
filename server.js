@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 app.use(cors(require("./config/cors").cors));
 app.use(express.json());
-const Group = require("./model/Group");
+const Event = require("./model/Event");
 const Transaction = require("./model/Transaction");
 
 app.post(
@@ -19,12 +19,12 @@ app.post(
     switch (event.type) {
       case "checkout.session.completed":
         const transactionId = event.data.object.metadata.transactionId;
-        const groupId = event.data.object.metadata.groupId;
+        const eventId = event.data.object.metadata.eventId;
 
         console.log(transactionId);
-        console.log(groupId);
+        console.log(eventId);
 
-        const updatedGroup = await Group.findByIdAndUpdate(groupId, {
+        const updatedEvent = await Event.findByIdAndUpdate(eventId, {
           isActive: true,
         })
           .lean()

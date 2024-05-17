@@ -1,7 +1,7 @@
 const { ObjectId } = require("mongodb");
 const mongoose = require("mongoose");
 
-const groupSchema = new mongoose.Schema(
+const eventSchema = new mongoose.Schema(
   {
     category: { type: ObjectId, ref: "category", required: true },
     user: { type: ObjectId, ref: "user", required: true },
@@ -19,4 +19,4 @@ const groupSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("group", groupSchema, "group");
+module.exports = mongoose.model("event", eventSchema, "event");
