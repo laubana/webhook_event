@@ -17,6 +17,8 @@ app.post(
 
     switch (event.type) {
       case "charge.succeeded":
+        console.log(event);
+
         const eventId = event.data.object.metadata.eventId;
 
         console.log(`${eventId}`);
