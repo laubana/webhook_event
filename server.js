@@ -6,6 +6,7 @@ const app = express();
 app.use(cors(require("./config/cors").cors));
 app.use(express.json());
 const Event = require("./model/Event");
+const Transaction = require("./model/Transaction");
 
 app.post(
   "/webhook",
@@ -19,9 +20,22 @@ app.post(
       case "charge.succeeded":
         console.log(event);
 
+        const amount = event.data.object.amount;
+        const chargeId = event.data.object.id;
         const eventId = event.data.object.metadata.eventId;
+        const receiptUrl = event.data.object.receipt_url;
+        const userId = event.data.object.metadata.userId;
 
         console.log(`${eventId}`);
+
+        const transaction = await Transaction.create({
+          amount,
+          chargeId,
+          receiptUrl,
+          user: userId,
+        })
+          .lean()
+          .exec();
 
         const updatedEvent = await Event.findByIdAndUpdate(eventId, {
           isActive: true,
