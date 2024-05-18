@@ -6,35 +6,24 @@ const app = express();
 app.use(cors(require("./config/cors").cors));
 app.use(express.json());
 const Event = require("./model/Event");
-const Transaction = require("./model/Transaction");
 
 app.post(
   "/webhook",
-  express.json({ type: "application/json" }),
+  // express.json({ type: "application/json" }),
   async (req, res) => {
     const event = req.body;
 
     console.log(`${event.type} :: ${event.id}`);
 
     switch (event.type) {
-      case "checkout.session.completed":
-        const transactionId = event.data.object.metadata.transactionId;
+      case "charge.succeeded":
         const eventId = event.data.object.metadata.eventId;
 
-        console.log(`${transactionId} :: ${eventId}`);
+        console.log(`${eventId}`);
 
         const updatedEvent = await Event.findByIdAndUpdate(eventId, {
           isActive: true,
         })
-          .lean()
-          .exec();
-
-        const updatedTransaction = await Transaction.findByIdAndUpdate(
-          transactionId,
-          {
-            status: "complete",
-          }
-        )
           .lean()
           .exec();
         break;
