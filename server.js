@@ -33,9 +33,7 @@ app.post(
           chargeId,
           receiptUrl,
           user: userId,
-        })
-          .lean()
-          .exec();
+        });
 
         const updatedEvent = await Event.findByIdAndUpdate(eventId, {
           isActive: true,
