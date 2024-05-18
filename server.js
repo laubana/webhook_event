@@ -22,6 +22,7 @@ app.post(
 
         const amount = event.data.object.amount;
         const chargeId = event.data.object.id;
+        const description = event.data.object.metadata.description;
         const eventId = event.data.object.metadata.eventId;
         const receiptUrl = event.data.object.receipt_url;
         const userId = event.data.object.metadata.userId;
@@ -31,6 +32,7 @@ app.post(
         const transaction = await Transaction.create({
           amount,
           chargeId,
+          description,
           receiptUrl,
           user: userId,
         });
