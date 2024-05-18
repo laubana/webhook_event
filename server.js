@@ -14,15 +14,14 @@ app.post(
   async (req, res) => {
     const event = req.body;
 
-    console.log(event.type);
+    console.log(`${event.type} :: ${event.id}`);
 
     switch (event.type) {
       case "checkout.session.completed":
         const transactionId = event.data.object.metadata.transactionId;
         const eventId = event.data.object.metadata.eventId;
 
-        console.log(transactionId);
-        console.log(eventId);
+        console.log(`${transactionId} :: ${eventId}`);
 
         const updatedEvent = await Event.findByIdAndUpdate(eventId, {
           isActive: true,
@@ -38,9 +37,6 @@ app.post(
         )
           .lean()
           .exec();
-        break;
-      case "payment_method.attached":
-        const paymentMethod = event.data.object;
         break;
       default:
     }
