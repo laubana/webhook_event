@@ -16,34 +16,46 @@ app.post(
 
     console.log(`${event.type} :: ${event.id}`);
 
-    switch (event.type) {
-      case "charge.succeeded":
-        console.log(event);
+    if (event.type === "charge.succeeded") {
+      console.log(event);
 
-        const amount = event.data.object.amount;
-        const chargeId = event.data.object.id;
-        const description = event.data.object.metadata.description;
-        const eventId = event.data.object.metadata.eventId;
-        const receiptUrl = event.data.object.receipt_url;
-        const userId = event.data.object.metadata.userId;
+      const amount = event.data.object.amount;
+      const chargeId = event.data.object.id;
+      const description = event.data.object.metadata.description;
+      const eventId = event.data.object.metadata.eventId;
+      const receiptUrl = event.data.object.receipt_url;
+      const userId = event.data.object.metadata.userId;
 
-        console.log(`${eventId}`);
+      console.log(`${eventId}`);
 
-        const transaction = await Transaction.create({
-          amount,
-          chargeId,
-          description,
-          receiptUrl,
-          user: userId,
-        });
+      const transaction = await Transaction.create({
+        amount,
+        chargeId,
+        description,
+        receiptUrl,
+        user: userId,
+      });
 
-        const updatedEvent = await Event.findByIdAndUpdate(eventId, {
-          isActive: true,
-        })
-          .lean()
-          .exec();
-        break;
-      default:
+      const updatedEvent = await Event.findByIdAndUpdate(eventId, {
+        isActive: true,
+      })
+        .lean()
+        .exec();
+    } else if (event.type === "charge.refunded") {
+      console.log(event);
+
+      const amountRefunded = event.data.object.id;
+      const chargeId = event.data.object.id;
+
+      console.log(`${chargeId}`);
+
+      const updatedTransaction = await Transaction.findOneAndUpdate(
+        { chargeId },
+        { $inc: { amount: -amountRefunded } },
+        { new: true }
+      )
+        .lean()
+        .exec();
     }
 
     res.json({ received: true });
