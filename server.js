@@ -16,7 +16,7 @@ app.post(
 
     console.log(`${event.type} :: ${event.id}`);
 
-    if (event.type === "charge.succeeded") {
+    if (event.type === "charge.updated") {
       console.log(event);
 
       const amount = event.data.object.amount;
@@ -25,8 +25,6 @@ app.post(
       const eventId = event.data.object.metadata.eventId;
       const receiptUrl = event.data.object.receipt_url;
       const userId = event.data.object.metadata.userId;
-
-      console.log(`${eventId}`);
 
       const transaction = await Transaction.create({
         amount,
@@ -41,17 +39,15 @@ app.post(
       })
         .lean()
         .exec();
-    } else if (event.type === "charge.refunded") {
+    } else if (event.type === "charge.refund.updated") {
       console.log(event);
 
-      const amountRefunded = event.data.object.amount_refunded;
+      const amount = event.data.object.amount;
       const chargeId = event.data.object.id;
-
-      console.log(`${chargeId}`);
 
       const updatedTransaction = await Transaction.findOneAndUpdate(
         { chargeId },
-        { $inc: { amount: -amountRefunded } },
+        { $inc: { amount: -amount } },
         { new: true }
       )
         .lean()
