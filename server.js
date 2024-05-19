@@ -44,7 +44,7 @@ app.post(
     } else if (event.type === "charge.refunded") {
       console.log(event);
 
-      const amountRefunded = event.data.object.id;
+      const amountRefunded = event.data.object.amount_refunded;
       const chargeId = event.data.object.id;
 
       console.log(`${chargeId}`);
